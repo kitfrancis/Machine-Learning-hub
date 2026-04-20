@@ -35,7 +35,7 @@ export const signUp = async (
   if (error) return { error: error.message };
 
   revalidatePath("/", "layout");
-  redirect("/dashboard");
+  redirect("/");
 };
 
 export const signOut = async () => {
