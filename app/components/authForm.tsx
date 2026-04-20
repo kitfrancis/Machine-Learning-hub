@@ -4,13 +4,10 @@ import { Button } from "@/components/ui/button";
 import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useActionState } from "react";
-
-type AuthFormProps = {
-  action: (prevState: { error?: string } | null, formData: FormData) => Promise<{ error?: string } | null>;
-  isRegister?: boolean;
-};
+import { useEffect, useState } from "react";
+import { signIn, signUp } from "@/app/actions/auth";
+import { useRouter } from "next/navigation";
+import {toast} from "sonner"
 
 const errorMessages: Record<string, string> = {
   "Invalid login credentials": "Wrong email or password. Please try again.",
@@ -19,24 +16,60 @@ const errorMessages: Record<string, string> = {
   "Password should be at least 6 characters": "Password must be at least 6 characters.",
 };
 
-export const AuthForm = ({ action, isRegister }: AuthFormProps) => {
-  const [error, formAction] = useActionState(action, null);
+export default function AuthForm() {
+  const [isRegister, setIsRegister] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
+  const router = useRouter();
 
-  
+  useEffect(() => {
+    setError(null);
+  }, [isRegister]);
+
+  const handleSubmit = async (formData: FormData) => {
+    setError(null);
+    setIsPending(true);
+
+
+    if (isRegister) {
+      const result = await signUp(null, formData);
+      setIsPending(false);
+      if (result?.error) {
+        setError(errorMessages[result.error] ?? result.error);
+
+      } else {
+        toast.success("Account created! Please log in.");
+        setIsRegister(false);
+      }
+    } else {
+      const result = await signIn(null, formData);
+      setIsPending(false);
+      if (result?.error) {
+        setError(errorMessages[result.error] ?? result.error);
+      }
+    }
+  };
 
   return (
     <div className="flex items-center justify-center h-screen">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>{isRegister ? "Create an account" : "Login to your account"}</CardTitle>
-          <CardDescription>Enter your email below to {isRegister ? "register" : "login"}</CardDescription>
+          <CardDescription>
+            Enter your email below to {isRegister ? "register" : "login"}
+          </CardDescription>
           <CardAction>
-            <Link href={isRegister ? "/login" : "/signup"}>
-              <Button variant="link">{isRegister ? "Login" : "Sign Up"}</Button>
-            </Link>
+                <Button
+              type="button"
+              variant="link"
+              className="w-full"
+              onClick={() => setIsRegister(!isRegister)}
+            >
+              {isRegister ? "Log in" : "Sign up"}
+            </Button>
           </CardAction>
         </CardHeader>
-        <form action={formAction}>
+        <form action={handleSubmit}>
           <CardContent>
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
@@ -55,13 +88,14 @@ export const AuthForm = ({ action, isRegister }: AuthFormProps) => {
             </div>
           </CardContent>
           <CardFooter className="flex-col gap-2 mt-6">
-            {error?.error && <p className="text-sm text-red-500">{errorMessages[error.error] ?? error.error}</p>}
-            <Button type="submit" className="w-full">
-              {isRegister ? "Register" : "Login"}
+            {error && <p className="text-sm text-red-500 w-full">{error}</p>}
+            <Button type="submit" className="w-full" disabled={isPending}>
+              {isPending ? "Loading..." : isRegister ? "Register" : "Login"}
             </Button>
+            
           </CardFooter>
         </form>
       </Card>
     </div>
   );
-};
+}

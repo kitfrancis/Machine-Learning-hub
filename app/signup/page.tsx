@@ -1,6 +1,5 @@
-import { AuthForm } from "@/app/components/authForms";
-import { signUp } from "@/app/actions/auth";
+import AuthForm from "@/app/components/authForm";
 
-export default function SignUpPage() {
-  return <AuthForm action={signUp} isRegister />;
-}
+export default function SignUp() {
+  return <AuthForm />;
+} 

@@ -22,9 +22,9 @@ export const signIn = async (
 };
 
 export const signUp = async (
-  prevState: { error?: string } | null,
+  prevState: { error?: string; success?: boolean } | null,
   formData: FormData
-): Promise<{ error?: string } | null> => {
+): Promise<{ error?: string; success?: boolean } | null> => {
   const supabase = await createClient();
 
   const { error } = await supabase.auth.signUp({
@@ -34,8 +34,8 @@ export const signUp = async (
 
   if (error) return { error: error.message };
 
-  revalidatePath("/", "layout");
-  redirect("/");
+  return { success: true };
+
 };
 
 export const signOut = async () => {
