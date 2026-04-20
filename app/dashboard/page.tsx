@@ -16,9 +16,9 @@ export default async function Dashboard() {
     const userName = user.user_metadata?.name || user.email?.split("@")[0] || "User";
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center gap-6">
-            <h1 className="text-2xl font-semibold">Welcome to Machine Learning Hub, {userName}!</h1>
-            <p className="text-muted-foreground">You are logged in as {user.email}</p>
+        <div className="min-h-screen flex flex-col items-center justify-center px-6 gap-6">
+            <h1 className="text-lg lg:text-2xl text-center font-semibold">Welcome to Machine Learning Hub, <span className="font-bold">{userName}</span>!</h1>
+            <p className="text-muted-foreground text-center">You are logged in as {user.email}</p>
             <form action={signOut}>
                 <Button type="submit" variant="outline">
                     <LogOut className="mr-2 h-4 w-4" />

@@ -51,7 +51,7 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen">
+    <div className="flex items-center justify-center h-screen p-3 lg:p-0">
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>{isRegister ? "Create an account" : "Login to your account"}</CardTitle>
@@ -74,16 +74,16 @@ export default function AuthForm() {
             <div className="flex flex-col gap-6">
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" name="email" type="email" placeholder="m@example.com" required />
+                <Input className="px-3 text-sm lg-text-base rounded-md lg:rounded-2xl" id="email" name="email" type="email" placeholder="m@example.com" required />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
                   <Label htmlFor="password">Password</Label>
-                  <a href="#" className="ml-auto inline-block text-sm underline-offset-4 hover:underline">
+                  <a href="#" className="ml-auto inline-block text-xs lg:text-sm underline-offset-4 hover:underline">
                     Forgot your password?
                   </a>
                 </div>
-                <Input id="password" name="password" type="password" placeholder="your password" required />
+                <Input className="px-3  text-sm lg-text-base rounded-md lg:rounded-2xl"  id="password" name="password" type="password" placeholder="your password" required />
               </div>
             </div>
           </CardContent>
